@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hrag Soussani — Visual Creator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #080808;
+    --near-black: #0f0f0f;
+    --dark: #161616;
+    --mid: #1e1e1e;
+    --border: rgba(255,255,255,0.07);
+    --border-light: rgba(255,255,255,0.14);
+    --text: #e8e4dc;
+    --muted: #6a6560;
+    --accent: #c8a97e;
+    --accent-dim: rgba(200,169,126,0.15);
+    --white: #f2ede6;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black); color: var(--text);
+    font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.6;
+    cursor: none; overflow-x: hidden;
+  }
+  .cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); }
+  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(200,169,126,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transition: width 0.2s, height 0.2s, border-color 0.2s; transform: translate(-50%, -50%); }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 28px 48px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(8,8,8,0.97) 0%, transparent 100%); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 0.15em; color: var(--white); text-decoration: none; }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--accent); }
+
+  .hero { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200,169,126,0.04) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(200,169,126,0.03) 0%, transparent 60%); }
+  .hero-grain { position: absolute; inset: 0; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); background-size: 200px 200px; }
+  .hero-line { position: absolute; top: 0; left: 48px; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent); }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.8s 0.3s forwards; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(72px, 10vw, 130px); font-weight: 300; line-height: 0.9; color: var(--white); letter-spacing: -0.01em; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.8s 0.5s forwards; }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-desc { max-width: 500px; color: var(--muted); font-size: 12px; line-height: 1.8; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.8s 0.7s forwards; }
+  .hero-cta { display: inline-flex; align-items: center; gap: 12px; color: var(--accent); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-bottom: 1px solid var(--accent-dim); padding-bottom: 4px; transition: gap 0.3s; opacity: 0; animation: fadeUp 0.8s 0.9s forwards; }
+  .hero-cta:hover { gap: 20px; }
+  .hero-scroll { position: absolute; bottom: 48px; right: 48px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, var(--muted), transparent); animation: scrollAnim 2s infinite; }
+  @keyframes scrollAnim { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  .marquee-wrap { overflow: hidden; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--near-black); }
+  .marquee-track { display: flex; gap: 48px; animation: marquee 22s linear infinite; width: max-content; }
+  .marquee-item { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 48px; }
+  .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); opacity: 0.5; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  section { padding: 120px 48px; position: relative; }
+  .section-label { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); margin-bottom: 64px; display: flex; align-items: center; gap: 16px; }
+  .section-label::after { content: ''; display: block; width: 48px; height: 1px; background: var(--accent); opacity: 0.4; }
+
+  /* FEATURED */
+  .featured { background: var(--near-black); border-top: 1px solid var(--border); }
+  .featured-inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+  .video-frame { aspect-ratio: 16/9; background: var(--dark); border: 1px solid var(--border-light); position: relative; overflow: hidden; }
+  .video-frame iframe { width: 100%; height: 100%; border: none; display: block; }
+  .video-upload-zone { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: var(--dark); }
+  .upload-icon { width: 52px; height: 52px; border: 1px solid var(--border-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .upload-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.9; }
+  .upload-btn { margin-top: 8px; padding: 8px 20px; border: 1px solid var(--border-light); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; background: transparent; cursor: pointer; transition: border-color 0.3s; text-decoration: none; display: inline-block; }
+  .upload-btn:hover { border-color: var(--accent); }
+  .featured-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .featured-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 20px; }
+  .featured-desc { color: var(--muted); font-size: 12px; line-height: 1.9; margin-bottom: 32px; }
+  .featured-link { display: inline-flex; align-items: center; gap: 10px; color: var(--accent); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-bottom: 1px solid var(--accent-dim); padding-bottom: 3px; transition: gap 0.3s; }
+  .featured-link:hover { gap: 16px; }
+
+  /* SERVICES */
+  .services { background: var(--black); border-top: 1px solid var(--border); }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); }
+  .service-item { padding: 48px 40px; border-right: 1px solid var(--border); transition: background 0.4s; }
+  .service-item:last-child { border-right: none; }
+  .service-item:hover { background: var(--mid); }
+  .service-num { font-size: 10px; color: var(--muted); letter-spacing: 0.2em; margin-bottom: 24px; }
+  .service-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--white); margin-bottom: 16px; line-height: 1.2; }
+  .service-desc { color: var(--muted); font-size: 12px; line-height: 1.8; }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .tag { font-size: 10px; letter-spacing: 0.1em; padding: 4px 10px; border: 1px solid var(--border-light); color: var(--muted); text-transform: uppercase; }
+  .folder-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; color: var(--accent); text-decoration: none; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid var(--accent-dim); padding-bottom: 2px; transition: gap 0.3s; }
+  .folder-link:hover { gap: 14px; }
+
+  /* SESSIONS */
+  .sessions { background: var(--near-black); border-top: 1px solid var(--border); }
+  .sessions-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 64px; flex-wrap: wrap; gap: 24px; }
+  .sessions-count { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300; color: var(--white); line-height: 1; }
+  .sessions-count span { font-style: italic; color: var(--accent); }
+  .sessions-count-label { font-size: 11px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 8px; }
+  .session-row { display: grid; grid-template-columns: 44px 1fr auto auto; align-items: center; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); transition: background 0.3s; }
+  .session-row:first-child { border-top: 1px solid var(--border); }
+  .session-row:hover { background: rgba(255,255,255,0.02); }
+  .session-num { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+  .session-name { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .session-name strong { font-weight: 400; color: var(--white); display: block; margin-bottom: 2px; }
+  .session-role { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .session-upcoming { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); padding: 3px 10px; border: 1px solid var(--accent-dim); white-space: nowrap; }
+  .session-video-btn { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); text-decoration: none; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; transition: opacity 0.2s; white-space: nowrap; }
+  .session-video-btn:hover { opacity: 1; }
+
+  /* ABOUT */
+  .about { background: var(--black); border-top: 1px solid var(--border); }
+  .about-inner { display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start; }
+  .about-visual { aspect-ratio: 3/4; background: var(--mid); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+  .about-visual-text { color: var(--muted); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .about-heading { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--white); line-height: 1.05; margin-bottom: 32px; }
+  .about-heading em { font-style: italic; color: var(--accent); }
+  .about-body { color: var(--muted); font-size: 12px; line-height: 2; margin-bottom: 40px; }
+  .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 48px; }
+  .stat { padding: 24px; background: var(--black); }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--white); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+
+  /* CONTACT */
+  .contact { text-align: center; padding: 140px 48px; position: relative; overflow: hidden; background: var(--near-black); border-top: 1px solid var(--border); }
+  .contact-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(200,169,126,0.04) 0%, transparent 70%); }
+  .contact-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); font-weight: 300; color: var(--white); line-height: 1; margin-bottom: 24px; position: relative; }
+  .contact-title em { font-style: italic; color: var(--accent); }
+  .contact-sub { color: var(--muted); font-size: 12px; margin-bottom: 48px; position: relative; }
+  .contact-email { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,169,126,0.3); padding-bottom: 4px; transition: border-color 0.3s; position: relative; }
+  .contact-email:hover { border-color: var(--accent); }
+
+  footer { padding: 32px 48px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 10px; letter-spacing: 0.15em; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; } .hero { padding: 0 24px 60px; } .hero-line { left: 24px; }
+    section { padding: 80px 24px; } .featured-inner { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; } .service-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .session-row { grid-template-columns: 36px 1fr; } .session-role, .session-video-btn, .session-upcoming { grid-column: 2; }
+    .about-inner { grid-template-columns: 1fr; gap: 40px; } .about-visual { aspect-ratio: 16/9; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    body { cursor: auto; } .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="#" class="nav-logo">Hrag</a>
+  <ul class="nav-links">
+    <li><a href="#featured">Latest</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#sessions">Sessions</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-line"></div>
+  <p class="hero-eyebrow">EYP Video Editor &mdash; Photographer &amp; Designer</p>
+  <h1 class="hero-title">Frames<br>that <em>breathe.</em></h1>
+  <p class="hero-desc">7 EYP sessions across Europe and Armenia. Aftermovies, farewell videos, and visual work from national selections to international sessions. Every cut is intentional.</p>
+  <a href="#featured" class="hero-cta">Watch latest work &rarr;</a>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Video Editing <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Cinematography <span class="marquee-dot"></span></div>
+    <div class="marquee-item">EYP Sessions <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Farewell Videos <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Color Grading <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Photography <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Graphic Design <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Event Coverage <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Video Editing <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Cinematography <span class="marquee-dot"></span></div>
+    <div class="marquee-item">EYP Sessions <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Farewell Videos <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Color Grading <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Photography <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Graphic Design <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Event Coverage <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- FEATURED — Valencia RSC -->
+<section class="featured" id="featured">
+  <p class="section-label reveal">Latest Work</p>
+  <div class="featured-inner">
+    <div class="video-frame reveal">
+      <!--
+        TO EMBED YOUR VALENCIA VIDEO:
+        ── Google Drive ──────────────────────────────────────────
+        1. Open video in Drive → Share → "Anyone with the link"
+        2. Get the file ID from the URL  (the part between /d/ and /view)
+        3. Delete the <div class="video-upload-zone">…</div> below
+        4. Add:  <iframe src="https://drive.google.com/file/d/FILE_ID/preview" allowfullscreen></iframe>
+
+        ── YouTube ───────────────────────────────────────────────
+        Delete the zone div and add:
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+
+        ── Vimeo ─────────────────────────────────────────────────
+        <iframe src="https://player.vimeo.com/video/VIDEO_ID" allowfullscreen></iframe>
+      -->
+      <div class="video-upload-zone">
+        <div class="upload-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(200,169,126,0.7)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </div>
+        <p class="upload-label">València RSC 2026<br>Add your video link below</p>
+        <a href="https://drive.google.com/drive/folders/1Tbrz0rPPK5TdiJ1M1OPnGpNhmRDNtar0?usp=drive_link" class="upload-btn" target="_blank" rel="noopener">Open Valencia folder &rarr;</a>
+        <a href="#" class="upload-btn" style="margin-top:0;" onclick="promptVideoEmbed(this); return false;">+ Embed video directly</a>
+      </div>
+    </div>
+    <div class="featured-info reveal">
+      <p class="featured-tag">Most Recent &mdash; 2026</p>
+      <h2 class="featured-title">València Regional<br>Selection Conference</h2>
+      <p class="featured-desc">
+        The latest from the editorial desk — a farewell video from the València RSC 2026. Edited on-site, capturing the energy of a session that runs on arguments, bad sleep, and something that genuinely feels like magic by Sunday.<br><br>
+        Role: <span style="color: var(--text);">Editor</span>
+      </p>
+      <a href="#sessions" class="featured-link">View all session videos &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO FOLDERS -->
+<section class="services" id="portfolio">
+  <p class="section-label reveal">Portfolio</p>
+  <div class="services-grid">
+    <div class="service-item reveal">
+      <p class="service-num">01</p>
+      <h3 class="service-title">Video<br>Editing</h3>
+      <p class="service-desc">Aftermovies, farewell videos, teasers, and session recaps across 7 EYP events. Full pipeline from raw footage to final export.</p>
+      <div class="service-tags">
+        <span class="tag">Premiere Pro</span>
+        <span class="tag">After Effects</span>
+        <span class="tag">Color Grading</span>
+        <span class="tag">Sound Design</span>
+      </div>
+      <a href="https://drive.google.com/drive/folders/1nChy-B-sLbzyZeJR4lB1XBlJQGPW-WEv?usp=drive_link" class="folder-link" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        Open video folder &rarr;
+      </a>
+    </div>
+    <div class="service-item reveal">
+      <p class="service-num">02</p>
+      <h3 class="service-title">Photography<br>&amp; Retouching</h3>
+      <p class="service-desc">Candid event photography, portraits, and editorial stills from EYP sessions. Post-processing that feels lived-in, not plastic. <span style="color:var(--accent);font-size:10px;">(folder last updated 2023 — more recent work available on request)</span></p>
+      <div class="service-tags">
+        <span class="tag">Lightroom</span>
+        <span class="tag">Photoshop</span>
+        <span class="tag">Event Coverage</span>
+        <span class="tag">Portrait</span>
+      </div>
+      <a href="https://drive.google.com/drive/folders/106M5HwpBIGNITbLhvl8GOhGGigNKC37w?usp=drive_link" class="folder-link" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        Open photo folder &rarr;
+      </a>
+    </div>
+    <div class="service-item reveal">
+      <p class="service-num">03</p>
+      <h3 class="service-title">Graphic<br>Design</h3>
+      <p class="service-desc">Visual identities, event branding, posters, and digital assets. Clean work built to communicate at a glance.</p>
+      <div class="service-tags">
+        <span class="tag">Illustrator</span>
+        <span class="tag">Figma</span>
+        <span class="tag">Branding</span>
+        <span class="tag">Print</span>
+      </div>
+      <a href="https://drive.google.com/drive/folders/1Sgr0Gf2-nAVc9aXhXF1EpLeedQxhyaY1?usp=sharing" class="folder-link" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        Open design folder &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SESSIONS -->
+<section class="sessions" id="sessions">
+  <p class="section-label reveal">EYP Sessions</p>
+  <div class="sessions-top reveal">
+    <div>
+      <div class="sessions-count">0<span>7</span></div>
+      <p class="sessions-count-label">Sessions as Editor</p>
+    </div>
+    <p style="max-width: 340px; color: var(--muted); font-size: 12px; line-height: 1.9;">
+      From national selections to international sessions — each one a farewell video delivered under pressure, on time, and felt in the room.
+    </p>
+  </div>
+
+  <div>
+    <div class="session-row reveal">
+      <span class="session-num">01</span>
+      <div class="session-name">
+        <strong>Novi Sad 2026</strong>
+        19th National Selection Conference of EYP Serbia
+      </div>
+      <span class="session-upcoming">Upcoming &mdash; July 2026</span>
+      <span class="session-role">Editor</span>
+    </div>
+
+    <div class="session-row reveal">
+      <span class="session-num">02</span>
+      <div class="session-name">
+        <strong>València RSC 2026</strong>
+        Regional Selection Conference of EYP Spain
+      </div>
+      <!-- ✏️  Replace # with your València video link -->
+      <a href="https://drive.google.com/drive/folders/1Tbrz0rPPK5TdiJ1M1OPnGpNhmRDNtar0?usp=drive_link" class="session-video-btn" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Watch video
+      </a>
+      <span class="session-role">Editor</span>
+    </div>
+
+    <div class="session-row reveal">
+      <span class="session-num">03</span>
+      <div class="session-name">
+        <strong>Turku 2025</strong>
+        102nd International Session of the European Youth Parliament
+      </div>
+      <!-- ✏️  Replace # with your Turku video link -->
+      <a href="#" class="session-video-btn" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Watch video
+      </a>
+      <span class="session-role">Editorial Assistant</span>
+    </div>
+
+    <div class="session-row reveal">
+      <span class="session-num">04</span>
+      <div class="session-name">
+        <strong>Stepanavan RSC 2025</strong>
+        Regional Selection Conference of EYP Armenia
+      </div>
+      <!-- ✏️  Replace # with your Stepanavan video link -->
+      <a href="#" class="session-video-btn" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Watch video
+      </a>
+      <span class="session-role">Editor</span>
+    </div>
+
+    <div class="session-row reveal">
+      <span class="session-num">05</span>
+      <div class="session-name">
+        <strong>Porto 2024</strong>
+        42nd National Selection Conference of EYP Portugal
+      </div>
+      <!-- ✏️  Replace # with your Porto video link -->
+      <a href="#" class="session-video-btn" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Watch video
+      </a>
+      <span class="session-role">Editor</span>
+    </div>
+
+    <div class="session-row reveal">
+      <span class="session-num">06</span>
+      <div class="session-name">
+        <strong>18th National Session of EYP Cyprus</strong>
+      </div>
+      <!-- ✏️  Replace # with your Cyprus video link -->
+      <a href="#" class="session-video-btn" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Watch video
+      </a>
+      <span class="session-role">Editor</span>
+    </div>
+
+    <div class="session-row reveal">
+      <span class="session-num">07</span>
+      <div class="session-name">
+        <strong>Yerevan City Session 2024</strong>
+        EYP Armenia
+      </div>
+      <!-- ✏️  Replace # with your Yerevan video link -->
+      <a href="#" class="session-video-btn" target="_blank" rel="noopener">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Watch video
+      </a>
+      <span class="session-role">Editor</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <p class="section-label reveal">About</p>
+  <div class="about-inner">
+    <div class="about-visual reveal">
+      <div style="width:48px;height:48px;border:1px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(106,101,96,0.8)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <span class="about-visual-text">Your photo here</span>
+    </div>
+    <div class="about-content reveal">
+      <h2 class="about-heading">Telling stories<br>through <em>light</em><br>and motion.</h2>
+      <p class="about-body">
+        I'm Hrag — a visual creator based in Yerevan. My work lives in the edit suite, behind a camera, and in the quiet hours before a farewell video gets played in front of 200 people who haven't slept in four days.<br><br>
+        I've edited for 7 EYP sessions across Europe and Armenia — from the 102nd International Session in Turku, Finland, to regional conferences in Portugal, Spain, Cyprus, and Armenia. Each project sharpens the same instinct: find the moment, cut to it, make it matter.<br><br>
+        Beyond EYP, I work across photography and graphic design — always trying to make the work feel like it was made by a person, not produced by a process.
+      </p>
+      <div class="about-stats">
+        <div class="stat">
+          <p class="stat-num">7</p>
+          <p class="stat-label">EYP Sessions</p>
+        </div>
+        <div class="stat">
+          <p class="stat-num">Int'l</p>
+          <p class="stat-label">102nd IS, Turku</p>
+        </div>
+        <div class="stat">
+          <p class="stat-num">3+</p>
+          <p class="stat-label">Years editing</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-bg"></div>
+  <h2 class="contact-title reveal">Let's make<br>something <em>real.</em></h2>
+  <p class="contact-sub reveal">Open for sessions, collaborations, and creative projects.</p>
+  <a href="mailto:hragsoussani1@gmail.com" class="contact-email reveal">hragsoussani1@gmail.com</a>
+</section>
+
+<footer>
+  <span>&copy; 2026 Hrag Soussani</span>
+  <span style="letter-spacing: 0.3em; text-transform: uppercase;">Visual Creator</span>
+  <span>EYP &mdash; 7 Sessions</span>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+  (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+  document.querySelectorAll('a,button,.service-item,.session-row').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ring.style.width='48px';ring.style.height='48px';ring.style.borderColor='rgba(200,169,126,0.7)';});
+    el.addEventListener('mouseleave',()=>{ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(200,169,126,0.4)';});
+  });
+
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target);}});
+  },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  function promptVideoEmbed(btn) {
+    const url = prompt('Paste your Google Drive, YouTube, or Vimeo link:');
+    if (!url) return;
+    let src = '';
+    const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    const ytMatch = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (driveMatch) src = 'https://drive.google.com/file/d/'+driveMatch[1]+'/preview';
+    else if (ytMatch) src = 'https://www.youtube.com/embed/'+ytMatch[1];
+    else if (vimeoMatch) src = 'https://player.vimeo.com/video/'+vimeoMatch[1];
+    if (src) {
+      const iframe = document.createElement('iframe');
+      iframe.src = src; iframe.allowFullscreen = true;
+      iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
+      btn.closest('.video-upload-zone').replaceWith(iframe);
+    } else {
+      alert('Could not parse that URL. Try a YouTube, Vimeo, or Google Drive share link.');
+    }
+  }
+</script>
+</body>
+</html>
