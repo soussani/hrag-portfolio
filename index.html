@@ -55,7 +55,7 @@
 
   .hero-collage{position:relative;min-height:540px}
   .photo{position:absolute;overflow:hidden;border:2px solid var(--ink);background:#ddd}
-  .photo img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.08) contrast(1.02)}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.08) contrast(1.02);transition:opacity .18s ease,transform .28s ease}.photo img.swapping{opacity:0;transform:scale(1.035)}
   .photo.one{width:67%;height:62%;right:0;top:0;transform:rotate(2.8deg);box-shadow:var(--shadow)}
   .photo.two{width:58%;height:56%;left:0;bottom:4%;transform:rotate(-4deg);box-shadow:8px 8px 0 var(--blue)}
   .sticker{position:absolute;z-index:2;font-family:'Space Grotesk',sans-serif;font-weight:700;border:2px solid var(--ink);padding:11px 14px;background:var(--paper-2);border-radius:12px;box-shadow:4px 4px 0 var(--ink)}
@@ -368,6 +368,41 @@
   </div>
 
 <script>
+  // The two hero photos keep shuffling through Hrag's EYP photo archive.
+  const photoPool = [
+    '1mkaeWm18LGYw9QMwXWjZy-AkJHTH6XIA','1GNOkPBj6Y95vhZAkIYi4MptLUG4SCvVz',
+    '1tnETqaF127l5yWsfBvBgh0ImSNxufCXP','1LgoYIubnFeb-KtAW3gA_jXP4jTRfo0iN',
+    '1qZ2R1Bh77TUOXGZk11gkw6IrVSjPnVVT','1AiN_Gcp_m3LmfF72k-v58s6-cMnbSh9W',
+    '1gZYCwmFT4Ap5zyCYsmiAact1pBaRi-h9','1Mu3CMjncvkxgmO2tkhCdsEN_TstMX1DB',
+    '1RSsmyE5xPMe32HIfwj0VGI6RBzd__pgR','123Dg3ZNq6Z0fArs_U7smLZF7MW5EbFv2',
+    '12bVO1QyYkDz93ons8uwvx3ivjJ5NmmIp'
+  ];
+  const shuffleTargets = [...document.querySelectorAll('.hero-collage .photo img')];
+  let lastPhoto = new Map();
+  function randomPhoto(exclude = new Set()) {
+    const choices = photoPool.filter(id => !exclude.has(id));
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
+  function swapPhoto(img, used) {
+    const previous = lastPhoto.get(img);
+    const exclude = new Set(used);
+    if (previous) exclude.add(previous);
+    const id = randomPhoto(exclude);
+    used.add(id); lastPhoto.set(img,id);
+    const preload = new Image();
+    preload.src = `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;
+    preload.onload = () => {
+      img.classList.add('swapping');
+      setTimeout(() => { img.src = preload.src; img.classList.remove('swapping'); }, 170);
+    };
+  }
+  function shuffleHeroPhotos(){
+    const used = new Set();
+    shuffleTargets.forEach((img,i) => setTimeout(() => swapPhoto(img,used), i * 140));
+  }
+  shuffleHeroPhotos();
+  setInterval(shuffleHeroPhotos, 1800);
+
   const modal = document.getElementById('modal');
   const frame = document.getElementById('modalFrame');
   const title = document.getElementById('modalTitle');
