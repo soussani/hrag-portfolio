@@ -1,475 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hrag Soussani — Visual Creator</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Hrag Soussani — EYP visual creator, editor, photographer and designer." />
+<title>Hrag Soussani — EYP Visuals</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --black: #080808;
-    --near-black: #0f0f0f;
-    --dark: #161616;
-    --mid: #1e1e1e;
-    --border: rgba(255,255,255,0.07);
-    --border-light: rgba(255,255,255,0.14);
-    --text: #e8e4dc;
-    --muted: #6a6560;
-    --accent: #c8a97e;
-    --accent-dim: rgba(200,169,126,0.15);
-    --white: #f2ede6;
+  :root{
+    --ink:#141414;
+    --paper:#f7f2e8;
+    --paper-2:#fffaf0;
+    --pink:#ff5ca8;
+    --blue:#5b63ff;
+    --lime:#c9f94a;
+    --orange:#ff8b3d;
+    --muted:#6e6a63;
+    --line:rgba(20,20,20,.14);
+    --shadow:10px 10px 0 var(--ink);
+    --radius:22px;
   }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--black); color: var(--text);
-    font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.6;
-    cursor: none; overflow-x: hidden;
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit}
+  .site{max-width:1440px;margin:0 auto;padding:0 28px}
+
+  .nav{position:sticky;top:0;z-index:50;background:rgba(247,242,232,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1440px;margin:auto;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.03em}
+  .brand-dot{width:13px;height:13px;border-radius:50%;background:var(--pink);border:2px solid var(--ink);display:inline-block}
+  .nav-links{display:flex;gap:24px;font-size:13px;font-weight:700}
+  .nav-links a{position:relative}
+  .nav-links a::after{content:'';position:absolute;left:0;right:100%;bottom:-5px;height:2px;background:var(--ink);transition:right .25s}
+  .nav-links a:hover::after{right:0}
+
+  .hero{padding:72px 0 54px;display:grid;grid-template-columns:1.1fr .9fr;gap:46px;align-items:end;min-height:720px}
+  .hero-copy{position:relative}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--lime);border:2px solid var(--ink);padding:8px 12px;border-radius:999px;font-size:12px;font-weight:700;transform:rotate(-2deg);box-shadow:4px 4px 0 var(--ink)}
+  .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(72px,10vw,150px);line-height:.86;letter-spacing:-.075em;margin:28px 0 28px;max-width:900px}
+  .hero h1 span{display:block}
+  .hero h1 .pink{color:var(--pink);text-decoration:underline;text-decoration-thickness:5px;text-underline-offset:8px}
+  .hero h1 .blue{color:var(--blue)}
+  .hero-note{font-size:18px;line-height:1.45;max-width:640px}
+  .hero-note strong{background:var(--orange);padding:0 5px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 17px;border:2px solid var(--ink);font-weight:700;border-radius:999px;transition:transform .18s,box-shadow .18s,background .18s}
+  .btn:hover{transform:translate(-3px,-3px);box-shadow:5px 5px 0 var(--ink)}
+  .btn.primary{background:var(--pink)}
+  .btn.secondary{background:transparent}
+
+  .hero-collage{position:relative;min-height:540px}
+  .photo{position:absolute;overflow:hidden;border:2px solid var(--ink);background:#ddd}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.08) contrast(1.02)}
+  .photo.one{width:67%;height:62%;right:0;top:0;transform:rotate(2.8deg);box-shadow:var(--shadow)}
+  .photo.two{width:58%;height:56%;left:0;bottom:4%;transform:rotate(-4deg);box-shadow:8px 8px 0 var(--blue)}
+  .sticker{position:absolute;z-index:2;font-family:'Space Grotesk',sans-serif;font-weight:700;border:2px solid var(--ink);padding:11px 14px;background:var(--paper-2);border-radius:12px;box-shadow:4px 4px 0 var(--ink)}
+  .sticker.one{right:5%;bottom:2%;transform:rotate(5deg)}
+  .sticker.two{left:8%;top:7%;background:var(--blue);color:white;transform:rotate(-8deg)}
+
+  .ticker{overflow:hidden;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:var(--ink);color:var(--paper);white-space:nowrap}
+  .ticker-track{display:inline-flex;gap:28px;min-width:max-content;padding:12px 0;animation:ticker 24s linear infinite}
+  .ticker-item{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;display:inline-flex;align-items:center;gap:28px}
+  .ticker-dot{width:10px;height:10px;border-radius:50%;background:var(--lime);display:inline-block}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  section{padding:90px 0}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:34px}
+  .section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(42px,6vw,82px);line-height:.9;letter-spacing:-.06em}
+  .section-intro{max-width:430px;line-height:1.55;color:var(--muted);font-size:15px}
+
+  .feature-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:22px}
+  .video-card{border:2px solid var(--ink);border-radius:var(--radius);background:#171717;overflow:hidden;box-shadow:var(--shadow)}
+  .video-wrap{aspect-ratio:16/9;background:#111}
+  .video-wrap iframe{width:100%;height:100%;border:0;display:block}
+  .feature-copy{border:2px solid var(--ink);border-radius:var(--radius);padding:26px;background:var(--lime);display:flex;flex-direction:column;justify-content:space-between;min-height:100%}
+  .mini-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+  .feature-copy h3{font-family:'Space Grotesk',sans-serif;font-size:48px;line-height:.92;letter-spacing:-.055em;margin:24px 0}
+  .feature-copy p{font-size:15px;line-height:1.55}
+  .tiny{font-size:12px;color:rgba(20,20,20,.68);margin-top:18px}
+
+  .work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .work-card{border:2px solid var(--ink);border-radius:20px;overflow:hidden;background:var(--paper-2);transition:transform .2s,box-shadow .2s}
+  .work-card:hover{transform:translateY(-7px);box-shadow:8px 8px 0 var(--ink)}
+  .work-thumb{position:relative;aspect-ratio:16/10;background:#222;overflow:hidden}
+  .work-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .play{position:absolute;right:15px;bottom:15px;width:50px;height:50px;border:2px solid var(--ink);border-radius:50%;background:var(--pink);display:grid;place-items:center;font-size:20px;font-weight:700}
+  .work-meta{padding:18px 18px 20px;display:flex;justify-content:space-between;gap:15px}
+  .work-meta h3{font-family:'Space Grotesk',sans-serif;font-size:23px;letter-spacing:-.03em}
+  .work-meta p{margin-top:5px;font-size:13px;color:var(--muted)}
+  .work-year{font-weight:700;font-size:12px;white-space:nowrap;padding-top:3px}
+
+  .numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+  .number{border:2px solid var(--ink);border-radius:20px;padding:25px;background:var(--paper-2);min-height:170px;display:flex;flex-direction:column;justify-content:space-between}
+  .number:nth-child(1){background:var(--pink)}
+  .number:nth-child(2){background:var(--blue);color:white}
+  .number:nth-child(3){background:var(--orange)}
+  .number b{font-family:'Space Grotesk',sans-serif;font-size:58px;line-height:.85;letter-spacing:-.07em}
+  .number span{font-size:13px;font-weight:700;max-width:180px;line-height:1.3}
+
+  .timeline{border-top:2px solid var(--ink)}
+  .timeline-row{display:grid;grid-template-columns:90px 1fr 140px;gap:18px;padding:18px 0;border-bottom:1px solid var(--line);align-items:center}
+  .timeline-row:hover{background:rgba(255,255,255,.34)}
+  .year{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--blue)}
+  .session h4{font-family:'Space Grotesk',sans-serif;font-size:19px;letter-spacing:-.03em}
+  .session p{font-size:13px;color:var(--muted);margin-top:3px}
+  .role{justify-self:end;font-size:11px;font-weight:700;text-transform:uppercase;border:2px solid var(--ink);padding:6px 9px;border-radius:999px;background:var(--paper-2)}
+
+  .about-wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:stretch}
+  .about-photo{border:2px solid var(--ink);border-radius:24px;overflow:hidden;min-height:560px;position:relative;background:var(--blue)}
+  .about-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .about-photo .stamp{position:absolute;left:18px;bottom:18px;background:var(--lime);padding:10px 12px;border:2px solid var(--ink);border-radius:10px;font-weight:700;transform:rotate(-5deg);box-shadow:4px 4px 0 var(--ink)}
+  .about-copy{border:2px solid var(--ink);border-radius:24px;padding:34px;background:var(--paper-2)}
+  .about-copy h3{font-family:'Space Grotesk',sans-serif;font-size:52px;line-height:.9;letter-spacing:-.06em;margin-bottom:24px}
+  .about-copy p{font-size:16px;line-height:1.65;margin-bottom:18px}
+  .highlight{background:var(--pink);padding:0 4px}
+  .tag-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+  .tag{padding:8px 11px;border:2px solid var(--ink);border-radius:999px;font-size:12px;font-weight:700;background:var(--paper)}
+
+  .contact{border:2px solid var(--ink);border-radius:28px;background:var(--ink);color:var(--paper);padding:46px;margin-bottom:70px;position:relative;overflow:hidden}
+  .contact::before,.contact::after{content:'';position:absolute;border:2px solid var(--lime);border-radius:50%;opacity:.8}
+  .contact::before{width:180px;height:180px;right:40px;top:-70px}
+  .contact::after{width:90px;height:90px;right:140px;bottom:-35px;border-color:var(--pink)}
+  .contact-inner{position:relative;z-index:2;display:flex;justify-content:space-between;gap:30px;align-items:end}
+  .contact h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(44px,6vw,78px);line-height:.88;letter-spacing:-.06em}
+  .contact h2 span{color:var(--pink)}
+  .contact-copy{max-width:380px}
+  .contact-copy p{font-size:15px;line-height:1.55;color:#d7d0c3;margin-bottom:20px}
+  .contact-copy a{display:inline-flex;align-items:center;gap:8px;padding:11px 15px;background:var(--lime);color:var(--ink);border:2px solid var(--paper);border-radius:999px;font-weight:700}
+
+  footer{border-top:2px solid var(--ink);padding:22px 0 45px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+
+  .modal{position:fixed;inset:0;background:rgba(20,20,20,.78);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+  .modal.open{display:flex}
+  .modal-box{width:min(1100px,96vw);border:2px solid var(--ink);border-radius:22px;background:var(--paper);overflow:hidden;box-shadow:16px 16px 0 var(--pink);position:relative}
+  .modal-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:2px solid var(--ink)}
+  .modal-title{font-family:'Space Grotesk',sans-serif;font-weight:700}
+  .close{border:2px solid var(--ink);background:var(--lime);width:38px;height:38px;border-radius:50%;cursor:pointer;font-weight:700}
+  .modal-video{aspect-ratio:16/9;background:#111}
+  .modal-video iframe{width:100%;height:100%;border:0}
+
+  @media(max-width:980px){
+    .hero{grid-template-columns:1fr;min-height:auto;padding-top:48px}
+    .hero-collage{min-height:470px}
+    .feature-grid,.about-wrap{grid-template-columns:1fr}
+    .numbers{grid-template-columns:1fr}
+    .feature-copy{min-height:300px}
+    .about-photo{min-height:480px}
   }
-  .cursor { position: fixed; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); }
-  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(200,169,126,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transition: width 0.2s, height 0.2s, border-color 0.2s; transform: translate(-50%, -50%); }
-
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 28px 48px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(8,8,8,0.97) 0%, transparent 100%); }
-  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 0.15em; color: var(--white); text-decoration: none; }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.3s; }
-  .nav-links a:hover { color: var(--accent); }
-
-  .hero { height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 80px; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200,169,126,0.04) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 20% 80%, rgba(200,169,126,0.03) 0%, transparent 60%); }
-  .hero-grain { position: absolute; inset: 0; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); background-size: 200px 200px; }
-  .hero-line { position: absolute; top: 0; left: 48px; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent); }
-  .hero-eyebrow { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.8s 0.3s forwards; }
-  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(72px, 10vw, 130px); font-weight: 300; line-height: 0.9; color: var(--white); letter-spacing: -0.01em; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.8s 0.5s forwards; }
-  .hero-title em { font-style: italic; color: var(--accent); }
-  .hero-desc { max-width: 500px; color: var(--muted); font-size: 12px; line-height: 1.8; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.8s 0.7s forwards; }
-  .hero-cta { display: inline-flex; align-items: center; gap: 12px; color: var(--accent); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-bottom: 1px solid var(--accent-dim); padding-bottom: 4px; transition: gap 0.3s; opacity: 0; animation: fadeUp 0.8s 0.9s forwards; }
-  .hero-cta:hover { gap: 20px; }
-  .hero-scroll { position: absolute; bottom: 48px; right: 48px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
-  .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, var(--muted), transparent); animation: scrollAnim 2s infinite; }
-  @keyframes scrollAnim { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
-
-  .marquee-wrap { overflow: hidden; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--near-black); }
-  .marquee-track { display: flex; gap: 48px; animation: marquee 22s linear infinite; width: max-content; }
-  .marquee-item { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 48px; }
-  .marquee-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); opacity: 0.5; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-  section { padding: 120px 48px; position: relative; }
-  .section-label { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent); margin-bottom: 64px; display: flex; align-items: center; gap: 16px; }
-  .section-label::after { content: ''; display: block; width: 48px; height: 1px; background: var(--accent); opacity: 0.4; }
-
-  /* FEATURED */
-  .featured { background: var(--near-black); border-top: 1px solid var(--border); }
-  .featured-inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
-  .video-frame { aspect-ratio: 16/9; background: var(--dark); border: 1px solid var(--border-light); position: relative; overflow: hidden; }
-  .video-frame iframe { width: 100%; height: 100%; border: none; display: block; }
-  .video-upload-zone { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: var(--dark); }
-  .upload-icon { width: 52px; height: 52px; border: 1px solid var(--border-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-  .upload-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.9; }
-  .upload-btn { margin-top: 8px; padding: 8px 20px; border: 1px solid var(--border-light); color: var(--accent); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; background: transparent; cursor: pointer; transition: border-color 0.3s; text-decoration: none; display: inline-block; }
-  .upload-btn:hover { border-color: var(--accent); }
-  .featured-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
-  .featured-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 20px; }
-  .featured-desc { color: var(--muted); font-size: 12px; line-height: 1.9; margin-bottom: 32px; }
-  .featured-link { display: inline-flex; align-items: center; gap: 10px; color: var(--accent); text-decoration: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; border-bottom: 1px solid var(--accent-dim); padding-bottom: 3px; transition: gap 0.3s; }
-  .featured-link:hover { gap: 16px; }
-
-  /* SERVICES */
-  .services { background: var(--black); border-top: 1px solid var(--border); }
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); }
-  .service-item { padding: 48px 40px; border-right: 1px solid var(--border); transition: background 0.4s; }
-  .service-item:last-child { border-right: none; }
-  .service-item:hover { background: var(--mid); }
-  .service-num { font-size: 10px; color: var(--muted); letter-spacing: 0.2em; margin-bottom: 24px; }
-  .service-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--white); margin-bottom: 16px; line-height: 1.2; }
-  .service-desc { color: var(--muted); font-size: 12px; line-height: 1.8; }
-  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-  .tag { font-size: 10px; letter-spacing: 0.1em; padding: 4px 10px; border: 1px solid var(--border-light); color: var(--muted); text-transform: uppercase; }
-  .folder-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; color: var(--accent); text-decoration: none; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; border-bottom: 1px solid var(--accent-dim); padding-bottom: 2px; transition: gap 0.3s; }
-  .folder-link:hover { gap: 14px; }
-
-  /* SESSIONS */
-  .sessions { background: var(--near-black); border-top: 1px solid var(--border); }
-  .sessions-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 64px; flex-wrap: wrap; gap: 24px; }
-  .sessions-count { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300; color: var(--white); line-height: 1; }
-  .sessions-count span { font-style: italic; color: var(--accent); }
-  .sessions-count-label { font-size: 11px; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 8px; }
-  .session-row { display: grid; grid-template-columns: 44px 1fr auto auto; align-items: center; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); transition: background 0.3s; }
-  .session-row:first-child { border-top: 1px solid var(--border); }
-  .session-row:hover { background: rgba(255,255,255,0.02); }
-  .session-num { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
-  .session-name { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .session-name strong { font-weight: 400; color: var(--white); display: block; margin-bottom: 2px; }
-  .session-role { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .session-upcoming { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); padding: 3px 10px; border: 1px solid var(--accent-dim); white-space: nowrap; }
-  .session-video-btn { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); text-decoration: none; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; transition: opacity 0.2s; white-space: nowrap; }
-  .session-video-btn:hover { opacity: 1; }
-
-  /* ABOUT */
-  .about { background: var(--black); border-top: 1px solid var(--border); }
-  .about-inner { display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start; }
-  .about-visual { aspect-ratio: 3/4; background: var(--mid); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
-  .about-visual-text { color: var(--muted); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
-  .about-heading { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--white); line-height: 1.05; margin-bottom: 32px; }
-  .about-heading em { font-style: italic; color: var(--accent); }
-  .about-body { color: var(--muted); font-size: 12px; line-height: 2; margin-bottom: 40px; }
-  .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 48px; }
-  .stat { padding: 24px; background: var(--black); }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--white); line-height: 1; margin-bottom: 6px; }
-  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
-
-  /* CONTACT */
-  .contact { text-align: center; padding: 140px 48px; position: relative; overflow: hidden; background: var(--near-black); border-top: 1px solid var(--border); }
-  .contact-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(200,169,126,0.04) 0%, transparent 70%); }
-  .contact-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); font-weight: 300; color: var(--white); line-height: 1; margin-bottom: 24px; position: relative; }
-  .contact-title em { font-style: italic; color: var(--accent); }
-  .contact-sub { color: var(--muted); font-size: 12px; margin-bottom: 48px; position: relative; }
-  .contact-email { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,169,126,0.3); padding-bottom: 4px; transition: border-color 0.3s; position: relative; }
-  .contact-email:hover { border-color: var(--accent); }
-
-  footer { padding: 32px 48px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 10px; letter-spacing: 0.15em; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  @media (max-width: 900px) {
-    nav { padding: 20px 24px; } .hero { padding: 0 24px 60px; } .hero-line { left: 24px; }
-    section { padding: 80px 24px; } .featured-inner { grid-template-columns: 1fr; }
-    .services-grid { grid-template-columns: 1fr; } .service-item { border-right: none; border-bottom: 1px solid var(--border); }
-    .session-row { grid-template-columns: 36px 1fr; } .session-role, .session-video-btn, .session-upcoming { grid-column: 2; }
-    .about-inner { grid-template-columns: 1fr; gap: 40px; } .about-visual { aspect-ratio: 16/9; }
-    footer { flex-direction: column; gap: 12px; text-align: center; }
-    body { cursor: auto; } .cursor, .cursor-ring { display: none; }
+  @media(max-width:720px){
+    .site{padding:0 16px}.nav-inner{padding:14px 16px}.nav-links{gap:13px;font-size:11px}.brand{font-size:16px}
+    .hero h1{font-size:clamp(62px,19vw,100px)}
+    .hero-note{font-size:16px}.hero-collage{min-height:380px}
+    .photo.one{width:70%;height:64%}.photo.two{width:61%;height:55%}
+    section{padding:66px 0}.section-head{display:block}.section-intro{margin-top:16px}
+    .work-grid{grid-template-columns:1fr}
+    .timeline-row{grid-template-columns:65px 1fr;gap:10px}.role{grid-column:2;justify-self:start}
+    .contact{padding:30px 22px}.contact-inner{display:block}.contact-copy{margin-top:24px}
+    footer{padding-bottom:30px}
   }
 </style>
 </head>
 <body>
-
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<nav>
-  <a href="#" class="nav-logo">Hrag Soussani (AM)</a>
-  <ul class="nav-links">
-    <li><a href="#featured">Latest</a></li>
-    <li><a href="#portfolio">Portfolio</a></li>
-    <li><a href="#sessions">Sessions</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grain"></div>
-  <div class="hero-line"></div>
-  <p class="hero-eyebrow">Video Editor &mdash; Photographer &amp; Designer</p>
-  <h1 class="hero-title">Frames<br>that <em>breathe.</em></h1>
-  <p class="hero-desc">25+ EYP sessions across Europe and Armenia. Session Videos, and visual work from regional sessions to international sessions. Every cut is intentional.</p>
-  <a href="#featured" class="hero-cta">Watch my latest work &rarr;</a>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <div class="marquee-item">Video Editing <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Cinematography <span class="marquee-dot"></span></div>
-    <div class="marquee-item">EYP Sessions <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Farewell Videos <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Color Grading <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Photography <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Graphic Design <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Videography <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Video Editing <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Cinematography <span class="marquee-dot"></span></div>
-    <div class="marquee-item">EYP Sessions <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Farewell Videos <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Color Grading <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Photography <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Graphic Design <span class="marquee-dot"></span></div>
-    <div class="marquee-item">Videography <span class="marquee-dot"></span></div>
-  </div>
-</div>
-
-<!-- FEATURED — Valencia RSC -->
-<section class="featured" id="featured">
-  <p class="section-label reveal">Latest Work</p>
-  <div class="featured-inner">
-    <div class="video-frame reveal">
-      <!--
-        TO EMBED YOUR VALENCIA VIDEO:
-        ── Google Drive ──────────────────────────────────────────
-        1. Open video in Drive → Share → "Anyone with the link"
-        2. Get the file ID from the URL  (the part between /d/ and /view)
-        3. Delete the <div class="video-upload-zone">…</div> below
-        4. Add:  <iframe src="https://drive.google.com/file/d/1ebHw22nfpbektgU44vHtq1uOXyvafxbt/view?usp=drive_link" allowfullscreen></iframe>
-
-        ── YouTube ───────────────────────────────────────────────
-        Delete the zone div and add:
-        <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
-
-        ── Vimeo ─────────────────────────────────────────────────
-        <iframe src="https://player.vimeo.com/video/VIDEO_ID" allowfullscreen></iframe>
-      -->
-      <iframe src="https://drive.google.com/file/d/1ebHw22nfpbektgU44vHtq1uOXyvafxbt/preview" allowfullscreen></iframe>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top"><span class="brand-dot"></span> Hrag Soussani</a>
+      <nav class="nav-links">
+        <a href="#work">work</a>
+        <a href="#sessions">eyp</a>
+        <a href="#about">about</a>
+        <a href="#contact">contact</a>
+      </nav>
     </div>
-    <div class="featured-info reveal">
-      <p class="featured-tag">Most Recent &mdash; 2026</p>
-      <h2 class="featured-title">València Regional<br>Selection Conference</h2>
-      <p class="featured-desc">
-        The latest from the editorial desk — a farewell video from the València RSC 2026. Edited on-site, capturing the energy of a session that runs on arguments, bad sleep, and something that genuinely feels like magic by Sunday.<br><br>
-        Role: <span style="color: var(--text);">Editor</span>
-      </p>
-      <a href="#sessions" class="featured-link">View more session videos &rarr;</a>
-    </div>
-  </div>
-</section>
+  </header>
 
-<!-- PORTFOLIO FOLDERS -->
-<section class="services" id="portfolio">
-  <p class="section-label reveal">Portfolio</p>
-  <div class="services-grid">
-    <div class="service-item reveal">
-      <p class="service-num">01</p>
-      <h3 class="service-title">Video<br>Editing</h3>
-      <p class="service-desc">Farewell Videos, teasers, and session recaps across 25+ EYP events. Full pipeline from raw footage to final export.</p>
-      <div class="service-tags">
-        <span class="tag">Premiere Pro</span>
-        <span class="tag">After Effects</span>
-        <span class="tag">Color Grading</span>
-        <span class="tag">Sound Design</span>
-      </div>
-      <a href="https://drive.google.com/drive/folders/1nChy-B-sLbzyZeJR4lB1XBlJQGPW-WEv?usp=drive_link" class="folder-link" target="_blank" rel="noopener">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        Open video folder &rarr;
-      </a>
-    </div>
-    <div class="service-item reveal">
-      <p class="service-num">02</p>
-      <h3 class="service-title">Photography<br>&amp; Retouching</h3>
-      <p class="service-desc">Event photos, portraits, and editorial stills from EYP sessions. Post-processing that feels lived-in, not plastic. <span style="color:var(--accent);font-size:10px;">(folder last updated 2023 — more recent work available on request)</span></p>
-      <div class="service-tags">
-        <span class="tag">Lightroom</span>
-        <span class="tag">Photoshop</span>
-        <span class="tag">Portrait</span>
-      </div>
-      <a href="https://drive.google.com/drive/folders/106M5HwpBIGNITbLhvl8GOhGGigNKC37w?usp=drive_link" class="folder-link" target="_blank" rel="noopener">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        Open photo folder &rarr;
-      </a>
-    </div>
-    <div class="service-item reveal">
-      <p class="service-num">03</p>
-      <h3 class="service-title">Graphic<br>Design</h3>
-      <p class="service-desc">Visual identities, event branding, posters, and digital assets. Clean work built to communicate at a glance.</p>
-      <div class="service-tags">
-        <span class="tag">Illustrator</span>
-        <span class="tag">Figma</span>
-        <span class="tag">Branding</span>
-        <span class="tag">Print</span>
-      </div>
-      <a href="https://drive.google.com/drive/folders/1Sgr0Gf2-nAVc9aXhXF1EpLeedQxhyaY1?usp=sharing" class="folder-link" target="_blank" rel="noopener">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        Open design folder &rarr;
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- SESSIONS -->
-<section class="sessions" id="sessions">
-  <p class="section-label reveal">EYP Sessions</p>
-  <div class="sessions-top reveal">
-    <div>
-      <div class="sessions-count"><span>10+</span></div>
-      <p class="sessions-count-label">Sessions in Editorial Position</p>
-    </div>
-    <p style="max-width: 340px; color: var(--muted); font-size: 12px; line-height: 1.9;">
-      From regional sessions to international sessions — each one a farewell video delivered under pressure, on time, and felt in the room.
-    </p>
-  </div>
-
-  <div>
-    <div class="session-row reveal">
-      <span class="session-num">00</span>
-      <div class="session-name">
-        <strong>A Coruña 2026</strong>
-        National Selection Conference of EYP España 
-      </div>
-      <span class="session-upcoming">Hopefully Soon &mdash; October 2026</span>
-      <span class="session-role">Co-Editor</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">01</span>
-      <div class="session-name">
-        <strong>Novi Sad 2026</strong>
-        19th National Selection Conference of EYP Serbia
-      </div>
-      <span class="session-upcoming">Upcoming &mdash; July 2026</span>
-      <span class="session-role">Editor</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">02</span>
-      <div class="session-name">
-        <strong>València RSC 2026</strong>
-        Regional Selection Conference of EYP Spain
-      </div>
-      <!-- ✏️  Replace # with your València video link -->
-      <a href="https://drive.google.com/file/d/1ebHw22nfpbektgU44vHtq1uOXyvafxbt/view?usp=drive_link" class="session-video-btn" target="_blank" rel="noopener">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Watch video
-      </a>
-      <span class="session-role">Editor</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">03</span>
-      <div class="session-name">
-        <strong>Turku 2025</strong>
-        102nd International Session of the European Youth Parliament
-      </div>
-      <!-- ✏️  Replace # with your Turku video link -->
-      <a href="https://drive.google.com/file/d/1ADl5Vt70B-BmJrEvVi3qF_5qoFCNKw-9/view?usp=drive_link" class="session-video-btn" target="_blank" rel="noopener">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Watch video
-      </a>
-      <span class="session-role">Editorial Assistant</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">04</span>
-      <div class="session-name">
-        <strong>Stepanavan RSC 2025</strong>
-        Regional Selection Conference of EYP Armenia
-      </div>
-      <span class="session-role">Editor</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">05</span>
-      <div class="session-name">
-        <strong>Porto 2024</strong>
-        42nd National Selection Conference of EYP Portugal
-      </div>
-      <!-- ✏️  Replace # with your Porto video link -->
-      <a href="https://drive.google.com/file/d/1fR5K25w0cgziunA_TkEmZYCHv1hKRxbu/view?usp=drive_link" class="session-video-btn" target="_blank" rel="noopener">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Watch video
-      </a>
-      <span class="session-role">Editor</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">06</span>
-      <div class="session-name">
-        <strong>18th National Session of EYP Cyprus</strong>
-      </div>
-      <!-- ✏️  Replace # with your Cyprus video link -->
-      <a href="https://drive.google.com/file/d/1D3Hcg6IHbHYQD_xI3Z_jbRVqgZ9h9UGW/view?usp=drive_link" class="session-video-btn" target="_blank" rel="noopener">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Watch video
-      </a>
-      <span class="session-role">Editor</span>
-    </div>
-
-    <div class="session-row reveal">
-      <span class="session-num">07</span>
-      <div class="session-name">
-        <strong>Yerevan City Session 2024</strong>
-        EYP Armenia
-      </div>
-      <span class="session-role">Editor</span>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <p class="section-label reveal">About</p>
-  <div class="about-inner">
-    <div class="about-content reveal">
-      <h2 class="about-heading">Telling stories<br>through <em>light</em><br>and motion.</h2>
-      <p class="about-body">
-        I'm Hrag — a visual creator based in Yerevan. My work lives in the edit suite, behind a camera, and in the quiet hours before a farewell video gets played in front of 200 people who haven't slept in four days.<br><br>
-        I've participated for 25+ EYP sessions across Europe and Armenia. Each project sharpens the same instinct: find the moment, cut to it, make it matter.<br><br>
-      </p>
-      <div class="about-stats">
-        <div class="stat">
-          <p class="stat-num">25+</p>
-          <p class="stat-label">EYP Sessions</p>
-        </div>
-        <div class="stat">
-          <p class="stat-num">Int'l</p>
-          <p class="stat-label">102nd IS, Turku</p>
-        </div>
-        <div class="stat">
-          <p class="stat-num">3+</p>
-          <p class="stat-label">Years editing</p>
+  <main id="top" class="site">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">EYP visual creator · Armenia ↔ Europe</div>
+        <h1>
+          <span>I make</span>
+          <span class="pink">things move.</span>
+          <span class="blue">sometimes wildly.</span>
+        </h1>
+        <p class="hero-note">25+ EYP sessions, cameras everywhere, very little sleep. I work mostly in <strong>video</strong>, but I also shoot photos, build identities, design things, and generally try to find a way to make the impossible possible.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#work">See the good stuff ↓</a>
+          <a class="btn secondary" href="https://drive.google.com/drive/folders/1GJCuXIAkPUNrNfIDEVmew9dsDba_jiAf" target="_blank" rel="noopener">Open full archive ↗</a>
         </div>
       </div>
+
+      <div class="hero-collage" aria-label="Photography from Hrag's EYP archive">
+        <div class="photo one"><img src="https://drive.google.com/thumbnail?id=1gZYCwmFT4Ap5zyCYsmiAact1pBaRi-h9&sz=w1600" alt="EYP session photograph"></div>
+        <div class="photo two"><img src="https://drive.google.com/thumbnail?id=1AiN_Gcp_m3LmfF72k-v58s6-cMnbSh9W&sz=w1600" alt="Hrag at an EYP session"></div>
+        <div class="sticker one">probably editing</div>
+        <div class="sticker two">NO SLEEP ≠ NO IDEAS</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">video editing <i class="ticker-dot"></i></span>
+      <span class="ticker-item">cinematography <i class="ticker-dot"></i></span>
+      <span class="ticker-item">session videos <i class="ticker-dot"></i></span>
+      <span class="ticker-item">photography <i class="ticker-dot"></i></span>
+      <span class="ticker-item">graphic design <i class="ticker-dot"></i></span>
+      <span class="ticker-item">AI + creative workflows <i class="ticker-dot"></i></span>
+      <span class="ticker-item">video editing <i class="ticker-dot"></i></span>
+      <span class="ticker-item">cinematography <i class="ticker-dot"></i></span>
+      <span class="ticker-item">session videos <i class="ticker-dot"></i></span>
+      <span class="ticker-item">photography <i class="ticker-dot"></i></span>
+      <span class="ticker-item">graphic design <i class="ticker-dot"></i></span>
+      <span class="ticker-item">AI + creative workflows <i class="ticker-dot"></i></span>
     </div>
   </div>
-</section>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="contact-bg"></div>
-  <h2 class="contact-title reveal">Let's make<br>something <em>real.</em></h2>
-  <p class="contact-sub reveal">Open for sessions, collaborations, and creative projects.</p>
-  <a href="mailto:hragsoussani1@gmail.com" class="contact-email reveal">hragsoussani1@gmail.com</a>
-</section>
+  <main class="site">
+    <section id="work">
+      <div class="section-head">
+        <h2 class="section-title">recent<br>chaos.</h2>
+        <p class="section-intro">The work I am happiest about usually starts with a full memory card, a deadline that should probably not exist, and somebody saying, “can we make this a little more fun?”</p>
+      </div>
 
-<footer>
-  <span>&copy; 2026 Hrag Soussani</span>
-  <span style="letter-spacing: 0.3em; text-transform: uppercase;">Visual Creator</span>
-  <span>EYP &mdash; 25+ Sessions</span>
-</footer>
+      <div class="feature-grid">
+        <article class="video-card">
+          <div class="video-wrap">
+            <iframe src="https://drive.google.com/file/d/1ebHw22nfpbektgU44vHtq1uOXyvafxbt/preview" allow="autoplay; fullscreen" allowfullscreen title="València RSC 2026 Session Video"></iframe>
+          </div>
+        </article>
+        <article class="feature-copy">
+          <div>
+            <div class="mini-label">01 / Latest</div>
+            <h3>València RSC 2026</h3>
+            <p>Editor · farewell video · edited on-site.</p>
+            <p class="tiny">A few days of arguments, bad sleep, cameras, edits, and the kind of energy that makes you wonder why anyone ever decided to sleep normally.</p>
+          </div>
+          <a class="btn" href="https://drive.google.com/file/d/1ebHw22nfpbektgU44vHtq1uOXyvafxbt/view" target="_blank" rel="noopener">Open video ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2 class="section-title">pick a<br>memory.</h2>
+        <p class="section-intro">A few sessions that show how my style has moved over time. Click a card and watch it without leaving the page.</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="work-card" data-title="Turku IS 2025" data-video="https://drive.google.com/file/d/1ADl5Vt70B-BmJrEvVi3qF_5qoFCNKw-9/preview" data-modal>
+          <div class="work-thumb"><img src="https://drive.google.com/thumbnail?id=1ADl5Vt70B-BmJrEvVi3qF_5qoFCNKw-9&sz=w1600" alt="Turku 2025 video thumbnail"><div class="play">▶</div></div>
+          <div class="work-meta"><div><h3>Turku 2025</h3><p>102nd International Session · Editorial Assistant</p></div><div class="work-year">2025</div></div>
+        </article>
+
+        <article class="work-card" data-title="Porto NSC 2024" data-video="https://drive.google.com/file/d/1fR5K25w0cgziunA_TkEmZYCHv1hKRxbu/preview" data-modal>
+          <div class="work-thumb"><img src="https://drive.google.com/thumbnail?id=1fR5K25w0cgziunA_TkEmZYCHv1hKRxbu&sz=w1600" alt="Porto 2024 video thumbnail"><div class="play">▶</div></div>
+          <div class="work-meta"><div><h3>Porto 2024</h3><p>42nd National Selection Conference · Editor</p></div><div class="work-year">2024</div></div>
+        </article>
+
+        <article class="work-card" data-title="Cyprus 18th NSC" data-video="https://drive.google.com/file/d/1D3Hcg6IHbHYQD_xI3Z_jbRVqgZ9h9UGW/preview" data-modal>
+          <div class="work-thumb"><img src="https://drive.google.com/thumbnail?id=1D3Hcg6IHbHYQD_xI3Z_jbRVqgZ9h9UGW&sz=w1600" alt="Cyprus 18th session video thumbnail"><div class="play">▶</div></div>
+          <div class="work-meta"><div><h3>Cyprus 18</h3><p>18th National Session · Editor</p></div><div class="work-year">2024</div></div>
+        </article>
+
+        <article class="work-card" data-title="Vanadzor 2024" data-video="https://drive.google.com/file/d/1QkfEumc2W9kTqTyRxfvYasYigbt9Q48m/preview" data-modal>
+          <div class="work-thumb"><img src="https://drive.google.com/thumbnail?id=1QkfEumc2W9kTqTyRxfvYasYigbt9Q48m&sz=w1600" alt="Vanadzor 2024 video thumbnail"><div class="play">▶</div></div>
+          <div class="work-meta"><div><h3>Vanadzor 2024</h3><p>National Selection Conference · Editor</p></div><div class="work-year">2024</div></div>
+        </article>
+
+        <article class="work-card" data-title="Hamburg RSC 2024" data-video="https://drive.google.com/file/d/1RTX4wqs9oPdQ-VpIpA6UBvkOCWQzNjt2/preview" data-modal>
+          <div class="work-thumb"><img src="https://drive.google.com/thumbnail?id=1RTX4wqs9oPdQ-VpIpA6UBvkOCWQzNjt2&sz=w1600" alt="Hamburg RSC 2024 video thumbnail"><div class="play">▶</div></div>
+          <div class="work-meta"><div><h3>Hamburg RSC</h3><p>Regional Selection Conference · Editor</p></div><div class="work-year">2024</div></div>
+        </article>
+
+        <article class="work-card" data-title="Tskaltubo RSC 2023" data-video="https://drive.google.com/file/d/1eznA6M037YHvN_rh7xCwaT6hwOi32qZU/preview" data-modal>
+          <div class="work-thumb"><img src="https://drive.google.com/thumbnail?id=1eznA6M037YHvN_rh7xCwaT6hwOi32qZU&sz=w1600" alt="Tskaltubo RSC 2023 video thumbnail"><div class="play">▶</div></div>
+          <div class="work-meta"><div><h3>Tskaltubo RSC</h3><p>Regional Selection Conference · Editor</p></div><div class="work-year">2023</div></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="sessions">
+      <div class="section-head">
+        <h2 class="section-title">25+ sessions.<br>a lot happened.</h2>
+        <p class="section-intro">I've been in EYP since 2022, and almost all of that journey has happened somewhere inside Media. Somewhere between shooting, editing, fixing things, teaching things and making things work.</p>
+      </div>
+
+      <div class="numbers">
+        <div class="number"><b>25+</b><span>EYP sessions across Armenia & Europe</span></div>
+        <div class="number"><b>10+</b><span>sessions in editorial positions</span></div>
+        <div class="number"><b>3+</b><span>years of editing things at unreasonable hours</span></div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-row"><div class="year">2026</div><div class="session"><h4>València Regional Selection Conference</h4><p>Regional Selection Conference of EYP Spain</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2025</div><div class="session"><h4>Turku</h4><p>102nd International Session of the European Youth Parliament</p></div><div class="role">Editorial Assistant</div></div>
+        <div class="timeline-row"><div class="year">2025</div><div class="session"><h4>Stepanavan RSC</h4><p>Regional Selection Conference of EYP Armenia</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2024</div><div class="session"><h4>Porto</h4><p>42nd National Selection Conference of EYP Portugal</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2024</div><div class="session"><h4>18th National Session of EYP Cyprus</h4><p>National session</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2024</div><div class="session"><h4>Yerevan City Session</h4><p>EYP Armenia</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2024</div><div class="session"><h4>Vanadzor NSC</h4><p>National Selection Conference</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2024</div><div class="session"><h4>Hamburg RSC</h4><p>Regional Selection Conference</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2023</div><div class="session"><h4>Tskaltubo RSC</h4><p>Regional Selection Conference</p></div><div class="role">Editor</div></div>
+        <div class="timeline-row"><div class="year">2022</div><div class="session"><h4>Tashir RSC</h4><p>One of the first chapters of the story</p></div><div class="role">Media</div></div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-head">
+        <h2 class="section-title">hi. i'm<br>Hrag.</h2>
+        <p class="section-intro">This is the part where I am supposed to sound professional. I'll try.</p>
+      </div>
+      <div class="about-wrap">
+        <div class="about-photo">
+          <img src="https://drive.google.com/thumbnail?id=1tnETqaF127l5yWsfBvBgh0ImSNxufCXP&sz=w1600" alt="Portrait of Hrag Soussani">
+          <div class="stamp">still figuring it out ↑</div>
+        </div>
+        <div class="about-copy">
+          <h3>I like making people<br>feel something.</h3>
+          <p>I'm Hrag, based in Yerevan, Armenia. Most of the time I'm either behind a camera, inside an edit, or explaining to someone why their shortcut should absolutely be on a keyboard.</p>
+          <p>I've stayed in EYP Media since 2022 because I love what happens when technical work and people collide. A good session video is not just a collection of nice shots. It's a way of bringing somebody back to a moment they thought they had already left behind.</p>
+          <p>I'm also very into <span class="highlight">experimentation</span>. Traditional tools and methods got us here for a reason, but I don't see a reason to stop there. AI, new workflows and weird ideas can make things faster, stranger and sometimes simply better. The fun part is finding out which one it is.</p>
+          <p>And then there is the team. I like sharing the little tricks, workflows and random things I learn along the way. The goal is not just to finish the session. It's to have people leave knowing a little more than when they arrived.</p>
+          <div class="tag-row">
+            <span class="tag">Premiere Pro</span>
+            <span class="tag">After Effects</span>
+            <span class="tag">Cinematography</span>
+            <span class="tag">Photography</span>
+            <span class="tag">Lightroom</span>
+            <span class="tag">Photoshop</span>
+            <span class="tag">Illustrator</span>
+            <span class="tag">Figma</span>
+            <span class="tag">AI experiments</span>
+            <span class="tag">very little sleep</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div class="contact-inner">
+          <h2>Let's make<br>something <span>fun.</span></h2>
+          <div class="contact-copy">
+            <p>Sessions, videos, weird creative experiments, collaborations, or simply a conversation about why the farewell video needs one more cut.</p>
+            <a href="mailto:hragsoussani1@gmail.com">hragsoussani1@gmail.com ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Hrag Soussani</span>
+      <span>EYP · 25+ sessions · Armenia / Europe</span>
+      <a href="https://drive.google.com/drive/folders/1GJCuXIAkPUNrNfIDEVmew9dsDba_jiAf" target="_blank" rel="noopener">full work archive ↗</a>
+    </footer>
+  </main>
+
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-top"><div class="modal-title" id="modalTitle"></div><button class="close" id="closeModal" aria-label="Close">×</button></div>
+      <div class="modal-video"><iframe id="modalFrame" src="" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+    </div>
+  </div>
 
 <script>
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
-  (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
-  document.querySelectorAll('a,button,.service-item,.session-row').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{ring.style.width='48px';ring.style.height='48px';ring.style.borderColor='rgba(200,169,126,0.7)';});
-    el.addEventListener('mouseleave',()=>{ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(200,169,126,0.4)';});
+  const modal = document.getElementById('modal');
+  const frame = document.getElementById('modalFrame');
+  const title = document.getElementById('modalTitle');
+  const close = document.getElementById('closeModal');
+
+  document.querySelectorAll('[data-modal]').forEach(card => {
+    card.addEventListener('click', () => {
+      title.textContent = card.dataset.title || 'Session video';
+      frame.src = card.dataset.video || '';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    });
   });
 
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target);}});
-  },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-
-  function promptVideoEmbed(btn) {
-    const url = prompt('Paste your Google Drive, YouTube, or Vimeo link:');
-    if (!url) return;
-    let src = '';
-    const driveMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    const ytMatch = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-    if (driveMatch) src = 'https://drive.google.com/file/d/'+driveMatch[1]+'/preview';
-    else if (ytMatch) src = 'https://www.youtube.com/embed/'+ytMatch[1];
-    else if (vimeoMatch) src = 'https://player.vimeo.com/video/'+vimeoMatch[1];
-    if (src) {
-      const iframe = document.createElement('iframe');
-      iframe.src = src; iframe.allowFullscreen = true;
-      iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
-      btn.closest('.video-upload-zone').replaceWith(iframe);
-    } else {
-      alert('Could not parse that URL. Try a YouTube, Vimeo, or Google Drive share link.');
-    }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    frame.src = '';
   }
+  close.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 </script>
 </body>
 </html>
